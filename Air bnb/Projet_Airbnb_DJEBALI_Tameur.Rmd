@@ -1,0 +1,93 @@
+---
+title: "Projet Airbnb"
+author: "DJEBALI Tameur"
+date: "24/04/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Projet Airbnb  
+
+Tout d'abord, faisons appel au libraire readr.
+- Le package readr sera utiliser pour l'import des fichiers cvs.
+- La package dplyr pour manipuler les dataframe
+
+```{r}
+library (readr) 
+library(dplyr)
+```
+
+Pour importer les fichiers CSV, nous avons utilisé les fonction read_csv de librairie readr.
+La raison pour laquel nous avons fait appel à read_csv et non read.csv est que read_csv est plus rapide que read_csv, et de plus nous avons une visibilité sur les format de colonnes importer.
+
+```{r}
+df_listings <- read_csv('./Fichiers csv/listings.csv')
+```
+Nous allons maintenant selectionner les colonnes dont nous avons besoin uniquement.Pour cela nous allons faire appel au package dplyr, et plus précisement à la fonction select().
+
+```{r}
+df_listings<-df_listings %>%
+  select(host_response_rate,
+host_acceptance_rate,
+host_listings_count,
+latitude,
+longitude,
+city,
+zipcode,
+state,
+accommodates,
+room_type,
+bedrooms,
+bathrooms,
+beds,
+price,
+cleaning_fee,
+security_deposit,
+minimum_nights,
+maximum_nights,
+number_of_reviews)
+
+```
+
+La fonction glimpse() permet d'afficher un aperçu du tableau de données avec le nombre d'observations, le nombre de variables, le nom, le type et les premières valeurs de chacune des colonnes.
+
+```{r}
+df_listings %>%glimpse()
+
+```
+
+On ce rend compte que certaine colonnes ne sont pas associée au bon type de données.Tout en veillant à vérifier le contenue de chaque colonnes avant de convertir.
+
+On vérifie dans quels colonnes ils y'a des Na.
+
+```{r}
+colnames(df_listings)[colSums(is.na(df_listings)) > 0]
+
+```
+
+- La colonne host_listings_count,accommodates,bedrooms,beds,minimum_nights,maximum_nights,number_of_reviews ont comme type:integer.
+
+```{r}
+df_listings$host_listings_count<- as.integer(df_listings$host_listings_count)
+df_listings$accommodates<- as.integer(df_listings$accommodates)
+df_listings$bedrooms<- as.integer(df_listings$bedrooms)
+df_listings$beds<- as.integer(df_listings$beds)
+df_listings$minimum_nights<- as.integer(df_listings$minimum_nights)
+df_listings$maximum_nights<- as.integer(df_listings$maximum_nights)
+df_listings$number_of_reviews<- as.integer(df_listings$number_of_reviews)
+
+```
+
+On vérifie désormais si les colonnes ont bien été converties.
+
+```{r}
+df_listings %>%glimpse()
+
+```
+
+
+
+
